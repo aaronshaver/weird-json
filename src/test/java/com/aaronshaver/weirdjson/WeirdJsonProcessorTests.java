@@ -1,9 +1,11 @@
 package com.aaronshaver.weirdjson;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -19,6 +21,16 @@ class WeirdJsonProcessorTests {
 
 		assertTrue(events.get(0).contains(75));
 		assertTrue(keys.contains("id"));
+	}
+
+	@Test
+	void getNonexistentKittyThrowsException() throws NoSuchElementException, JsonProcessingException {
+		final String data = "{\"events\":[[0,75,\"Captain Fluff\",\"2021-01-01T13:11:51.141Z\"]],\"keys\":[\"id\",\"energy_level\",\"name\",\"timestamp\"]}";
+		WeirdJsonProcessor weirdJsonProcessor = new WeirdJsonProcessor(data);
+
+		Assertions.assertThrows(NoSuchElementException.class, () -> {
+			weirdJsonProcessor.getEnergyLevelsByKittyId(99);
+		});
 	}
 
 	@Test
