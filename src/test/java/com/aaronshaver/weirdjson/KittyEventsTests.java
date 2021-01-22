@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-class WeirdjsonApplicationTests {
+class KittyEventsTests {
 
 	@Test
 	void mapKittyEventsObjectToJsonString() throws JsonProcessingException {
