@@ -7,9 +7,18 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class WeirdJsonProcessorTests {
+
+	@Test
+	void getEnergyLevelsByKittyIdOneEventCaseReturnsExpected() throws NoSuchElementException, JsonProcessingException {
+		final String data = "{\"events\":[[3,11,\"Sir Sleepsalot\",\"2021-01-05T13:11:51.141Z\"],[0,75,\"Captain Fluff\",\"2021-01-01T13:11:51.141Z\"],[1,33,\"Floofers\",\"2021-01-02T13:11:51.141Z\"]],\"keys\":[\"id\",\"energy_level\",\"name\",\"timestamp\"]}";
+		WeirdJsonProcessor weirdJsonProcessor = new WeirdJsonProcessor(data);
+		assertEquals("{\"id\":0,\"starting_energy\":75,\"ending_energy\":75}",
+				weirdJsonProcessor.getEnergyLevelsByKittyId(0));
+	}
 
 	@Test
 	void processorConstructorPassesWithFullDataSet() throws JsonProcessingException {
@@ -21,6 +30,13 @@ class WeirdJsonProcessorTests {
 
 		assertTrue(events.get(0).contains(75));
 		assertTrue(keys.contains("id"));
+	}
+
+	@Test
+	void getExistingKittyDoesNotThrowException() throws NoSuchElementException, JsonProcessingException {
+		final String data = "{\"events\":[[0,75,\"Captain Fluff\",\"2021-01-01T13:11:51.141Z\"]],\"keys\":[\"id\",\"energy_level\",\"name\",\"timestamp\"]}";
+		WeirdJsonProcessor weirdJsonProcessor = new WeirdJsonProcessor(data);
+		weirdJsonProcessor.getEnergyLevelsByKittyId(0);
 	}
 
 	@Test

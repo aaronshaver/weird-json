@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.NoSuchElementException;
 
+import static java.util.stream.Collectors.toUnmodifiableList;
+
 public class WeirdJsonProcessor {
 
     private KittyEvents kittyEvents;
@@ -18,11 +20,22 @@ public class WeirdJsonProcessor {
         return kittyEvents;
     }
 
-    public String getEnergyLevelsByKittyId(int i) throws NoSuchElementException {
-        if (kittyEvents.getEvents().stream().noneMatch(event -> event.get(0).equals(i))) {
+    public String getEnergyLevelsByKittyId(int id) throws NoSuchElementException, JsonProcessingException {
+        if (kittyEvents.getEvents().stream().noneMatch(event -> event.get(0).equals(id))) {
             throw new NoSuchElementException();
         }
 
-        return "{}";
+        final int energyLevel = (int) kittyEvents.getEvents().stream()
+                .filter(event -> event.get(0).equals(id))
+                .collect(toUnmodifiableList()).get(0).get(1);
+
+        KittyResponse kittyResponse = new KittyResponse();
+        kittyResponse.setId(id);
+        kittyResponse.setStartingEnergy(energyLevel);
+        kittyResponse.setEndingEnergy(energyLevel);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        return objectMapper.writeValueAsString(kittyResponse);
     }
 }
