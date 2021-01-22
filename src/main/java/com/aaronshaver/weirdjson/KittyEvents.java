@@ -3,14 +3,16 @@ package com.aaronshaver.weirdjson;
 import java.util.ArrayList;
 
 public class KittyEvents {
+    private ArrayList<String> keys;
 
-    final ArrayList<String> keys;
+    public KittyEvents(ArrayList<String> keys) {
+        setKeys(keys);
+    }
+    public ArrayList<String> getKeys() {
+        return keys;
+    }
 
-    public KittyEvents() {
-        this.keys = new ArrayList<>();
-        keys.add("id");
-        keys.add("energy_level");
-        keys.add("name");
-        keys.add("timestamp");
+    public void setKeys(ArrayList<String> keys) {
+        this.keys = keys;
     }
 }
