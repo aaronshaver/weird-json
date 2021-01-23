@@ -31,8 +31,19 @@ public class WeirdJsonProcessor {
                 .filter(event -> event.get(0).equals(id))
                 .collect(toUnmodifiableList());
 
-        // I considered using a custom comparator inside sorted() inside the stream, but I don't understand those well
-        // enough and this works. Done is better than perfect.
+        // ************************************************************************************************
+        // Retrospective note: To refactor this, to reduce constant type conversions and to use more
+        // built-in and modern code, I would extract all the plain Object/plain String type data
+        // into a new class like KittyEvent and, while doing so, populate it with types like LocalDateTime.
+        // These KittyEvent objects would live in a single (not nested) list, so we could avoid this
+        // .get(x).get(y) nonsense.
+        //
+        // *Then* I could do something like:
+        // Collections.sort(listOfEvents, Comparator.comparing(KittyEvent::getDateTime));
+        //
+        // And then simply grab the energy level from the first and last items of the sorted list
+        // ************************************************************************************************
+        
         LocalDateTime earliest = LocalDateTime.parse((String) singleKittyEvents.get(0).get(3));
         LocalDateTime latest = LocalDateTime.parse((String) singleKittyEvents.get(0).get(3));
         for (int i = 0; i < singleKittyEvents.size(); i++) {
@@ -47,7 +58,6 @@ public class WeirdJsonProcessor {
         int startingEnergy = -1;
         int endingEnergy = -1;
         for (int i = 0; i < singleKittyEvents.size(); i++) {
-            // TODO: refactor idea: parse dates once, put into Pair<Integer, LocalDateTime> to avoid so many conversions
             LocalDateTime localDateTime = LocalDateTime.parse((String) singleKittyEvents.get(i).get(3));
             int energyLevel = (int) singleKittyEvents.get(i).get(1);
             if (localDateTime.equals(earliest)) {
