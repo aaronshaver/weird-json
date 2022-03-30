@@ -57,6 +57,9 @@ public class WeirdJsonProcessor {
 
         int startingEnergy = -1;
         int endingEnergy = -1;
+        // 2022-03-30 note upon a re-read of this code: you don't have to go through the data set twice;
+        // you can just grab the energy level while you grab it above; it will naturally overwrite/get updated
+        // if the conditional is satisfied
         for (int i = 0; i < singleKittyEvents.size(); i++) {
             LocalDateTime localDateTime = LocalDateTime.parse((String) singleKittyEvents.get(i).get(3));
             int energyLevel = (int) singleKittyEvents.get(i).get(1);
@@ -76,6 +79,8 @@ public class WeirdJsonProcessor {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
+        // 2022-03-30 note upon a re-read of this code: we don't need to instantiate a fresh objectMapper,
+        // particularly since we're not doing anything exotic with it; just DRY this up by using a class-level objectMapper
         return objectMapper.writeValueAsString(kittyResponse);
     }
 }
